@@ -5,39 +5,82 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import { getTypeStyle } from "../../utils/typeColors"; // <== importa a utilidade de cor
 
 export default function PokemonCard({ name, image, types }) {
-  const typesPokemons = () => {
-    if (types[1]) {
-      return types[0].type.name + " | " + types[1].type.name;
-    }
-    return types[0].type.name;
-  };
+  // Tipo principal para definir a cor do card
+  const mainType = types[0].type.name;
+  const cardColor = getTypeStyle(mainType);
+
   return (
-    <Card sx={{ maxWidth: 345 }}>
-      <CardMedia sx={{ height: 250 }} image={image} title="green iguana" />
+    <Card
+      sx={{
+        maxWidth: 345,
+        backgroundColor: cardColor.backgroundColor,
+        color: cardColor.color,
+        borderRadius: 2,
+        boxShadow: 3,
+        transition: "0.3s",
+        "&:hover": {
+          transform: "scale(1.03)",
+        },
+      }}
+    >
+      <CardMedia
+        sx={{ height: 250, backgroundSize: "contain" }}
+        image={image}
+        title={name}
+      />
       <CardContent>
         <Box
           display="flex"
           justifyContent="space-between"
           alignItems={"center"}
         >
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            sx={{ textTransform: "capitalize" }}
+          >
             {name}
           </Typography>
-          <Typography gutterBottom variant="caption" component="div">
-            {typesPokemons()}
-          </Typography>
         </Box>
-        {/* <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          Lizards are a widespread group of squamate reptiles, with over 6,000
-          species, ranging across all continents except Antarctica
-        </Typography> */}
+
+        {/* Tipos como badges coloridas */}
+        <Box
+          sx={{
+            display: "flex",
+            gap: 1,
+            mt: 1,
+            flexWrap: "wrap",
+          }}
+        >
+          {types.map((item, index) => {
+            const typeName = item.type.name;
+            const tagColor = getTypeStyle(typeName);
+
+            return (
+              <Box
+                key={index}
+                sx={{
+                  backgroundColor: tagColor.badgeColor,
+                  color: tagColor.color,
+                  px: 2,
+                  py: 0.5,
+                  borderRadius: "12px",
+                  fontWeight: "bold",
+                  fontSize: "12px",
+                  textTransform: "capitalize",
+                }}
+              >
+                {typeName}
+              </Box>
+            );
+          })}
+        </Box>
       </CardContent>
-      <CardActions>
-        {/* <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button> */}
-      </CardActions>
+      <CardActions />
     </Card>
   );
 }

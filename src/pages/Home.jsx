@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import PokemonCard from "../components/PokemonCard";
-import { Box, Container, Grid } from "@mui/material";
+import { Box, Container, Grid, Typography } from "@mui/material";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getTypeStyle } from "../utils/typeColors";
 
 export const Home = ({ setPokemonData }) => {
   const [pokemons, setPokemons] = useState([]);
-  const navigation = useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
     getPokemons();
   }, []);
@@ -36,26 +37,45 @@ export const Home = ({ setPokemonData }) => {
   };
 
   const pokemonPickHandler = (pokemonData) => {
-    setPokemonData(pokemonData);
-    navigation("/profile");
+    navigate("/profile", { state: { pokemonData } });
   };
 
   return (
     <div>
       <NavBar pokemonFilter={pokemonFilter} />
       <Container maxwidth="false">
-        <Grid container spacing={3}>
-          {pokemons.map((pokemon, key) => (
-            <Grid item xs={12} md={3} key={key}>
-              <Box onClick={() => pokemonPickHandler(pokemon.data)}>
-                <PokemonCard
-                  name={pokemon.data.name}
-                  image={pokemon.data.sprites.front_default}
-                  types={pokemon.data.types}
-                ></PokemonCard>
-              </Box>
-            </Grid>
-          ))}
+        <Grid container spacing={2} marginTop="4EM">
+          {pokemons.map((pokemon, key) => {
+            const data = pokemon.data;
+            const mainType = data.types[0].type.name;
+            const cardStyle = getTypeStyle(mainType);
+
+            return (
+              <Grid item xs={12} md={3} key={key}>
+                <Box
+                  onClick={() => pokemonPickHandler(data)}
+                  sx={{
+                    backgroundColor: cardStyle.backgroundColor,
+                    borderRadius: 2,
+                    p: 2,
+                    cursor: "pointer",
+                    transition: "0.3s",
+                    "&:hover": {
+                      transform: "scale(1.03)",
+                      boxShadow: 3,
+                    },
+                  }}
+                >
+                  <PokemonCard
+                    name={data.name}
+                    image={data.sprites.other["official-artwork"].front_default}
+                    types={data.types}
+                    style={cardStyle} // repasse todo o estilo para o Card
+                  />
+                </Box>
+              </Grid>
+            );
+          })}
         </Grid>
       </Container>
     </div>
