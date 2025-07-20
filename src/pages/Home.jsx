@@ -128,10 +128,6 @@ export const Home = ({ setPokemonData }) => {
       .catch((error) => console.error("Erro ao carregar pokémons:", error));
   };
 
-  const pokemonFilter = (value) => {
-    setSearchTerm(value);
-  };
-
   const pokemonPickHandler = (pokemonData) => {
     navigate("/profile", { state: { pokemonData } });
   };
@@ -227,7 +223,13 @@ export const Home = ({ setPokemonData }) => {
               const cardStyle = getTypeStyle(mainType);
 
               return (
-                <Grid item xs={12} md={3} key={key}>
+                <Grid
+                  item
+                  xs={10}
+                  md={2}
+                  key={key}
+                  sx={{ alignitems: "center" }}
+                >
                   <Box
                     onClick={() => pokemonPickHandler(data)}
                     sx={{

@@ -1,15 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React from "react";
-import NavBar from "../components/NavBar";
-import {
-  Typography,
-  Box,
-  Container,
-  Paper,
-  Grid,
-  Divider,
-  Button,
-} from "@mui/material";
+
+import { Typography, Box, Container, Paper, Grid, Button } from "@mui/material";
 import { getTypeStyle } from "../utils/typeColors";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -173,7 +165,7 @@ export const Profile = () => {
                 fontFamily: "monospace",
               }}
             >
-              <Grid container spacing={2}>
+              <Grid container spacing={1}>
                 <Grid item xs={12} md={4}>
                   <Typography variant="h6" fontWeight="bold" sx={{ mb: 1 }}>
                     #{String(id).padStart(3, "0")}
@@ -356,26 +348,26 @@ export const Profile = () => {
                             )}
                           </React.Fragment>
                         ))}
-                        <Box textAlign="center" mt={4}>
-                          <button
-                            onClick={() => navigate("/")}
-                            style={{
-                              padding: "10px 20px",
-                              fontSize: "16px",
-                              fontWeight: "bold",
-                              borderRadius: "10px",
-                              backgroundColor: "#ff5555",
-                              color: "#fff",
-                              border: "none",
-                              cursor: "pointer",
-                            }}
-                          >
-                            Voltar para Home
-                          </button>
-                        </Box>
                       </Box>
                     </Box>
                   )}
+                  <Box textAlign="center" mt={4}>
+                    <button
+                      onClick={() => navigate("/")}
+                      style={{
+                        padding: "10px 20px",
+                        fontSize: "16px",
+                        fontWeight: "bold",
+                        borderRadius: "10px",
+                        backgroundColor: "#ff5555",
+                        color: "#fff",
+                        border: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Voltar para Home
+                    </button>
+                  </Box>
                 </Grid>
               </Grid>
             </Paper>
