@@ -6,6 +6,7 @@ const FilterBar = ({
   onTypeChange,
   onSortChange,
   onSearchChange,
+  darkMode, // recebe a prop
 }) => {
   return (
     <Box
@@ -14,7 +15,9 @@ const FilterBar = ({
         justifyContent: "center",
         gap: 4,
         p: 5,
-        backgroundColor: "#f0fdd3",
+        backgroundColor: darkMode ? "#333" : "#f0fdd3", // muda cor conforme tema
+        borderRadius: 2,
+        boxShadow: 2,
       }}
     >
       <TextField
@@ -23,6 +26,17 @@ const FilterBar = ({
         size="small"
         onChange={onRegionChange}
         defaultValue="kanto"
+        sx={{
+          backgroundColor: darkMode ? "#222" : "#fff",
+          color: darkMode ? "#fff" : "#222",
+          borderRadius: 1,
+        }}
+        InputLabelProps={{
+          style: { color: darkMode ? "#fff" : "#222" },
+        }}
+        InputProps={{
+          style: { color: darkMode ? "#fff" : "#222" },
+        }}
       >
         <MenuItem value="kanto">Kanto (001–151)</MenuItem>
         <MenuItem value="johto">Johto (152–251)</MenuItem>
@@ -41,6 +55,17 @@ const FilterBar = ({
         size="small"
         onChange={onTypeChange}
         defaultValue="all"
+        sx={{
+          backgroundColor: darkMode ? "#222" : "#fff",
+          color: darkMode ? "#fff" : "#222",
+          borderRadius: 1,
+        }}
+        InputLabelProps={{
+          style: { color: darkMode ? "#fff" : "#222" },
+        }}
+        InputProps={{
+          style: { color: darkMode ? "#fff" : "#222" },
+        }}
       >
         <MenuItem value="all">Todos</MenuItem>
         <MenuItem value="fire">Fogo</MenuItem>
@@ -56,6 +81,17 @@ const FilterBar = ({
         size="small"
         onChange={onSortChange}
         defaultValue="id"
+        sx={{
+          backgroundColor: darkMode ? "#222" : "#fff",
+          color: darkMode ? "#fff" : "#222",
+          borderRadius: 1,
+        }}
+        InputLabelProps={{
+          style: { color: darkMode ? "#fff" : "#222" },
+        }}
+        InputProps={{
+          style: { color: darkMode ? "#fff" : "#222" },
+        }}
       >
         <MenuItem value="id">ID</MenuItem>
         <MenuItem value="name">Nome</MenuItem>
@@ -66,6 +102,17 @@ const FilterBar = ({
         variant="outlined"
         size="small"
         onChange={onSearchChange}
+        sx={{
+          backgroundColor: darkMode ? "#222" : "#fff",
+          color: darkMode ? "#fff" : "#222",
+          borderRadius: 1,
+        }}
+        InputLabelProps={{
+          style: { color: darkMode ? "#fff" : "#222" },
+        }}
+        InputProps={{
+          style: { color: darkMode ? "#fff" : "#222" },
+        }}
       />
     </Box>
   );

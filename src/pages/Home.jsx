@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import NavBar from "../components/NavBar";
 import PokemonCard from "../components/PokemonCard";
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { Box, Container, Grid, Typography, Button } from "@mui/material";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getTypeStyle } from "../utils/typeColors";
 import FilterBar from "../components/Filterbar";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 export const Home = ({ setPokemonData }) => {
   const [allPokemons, setAllPokemons] = useState([]);
@@ -14,7 +15,26 @@ export const Home = ({ setPokemonData }) => {
   const [type, setType] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [darkMode, setDarkMode] = useState(false); // tema
   const navigate = useNavigate();
+
+  const lightTheme = createTheme({
+    palette: {
+      mode: "light",
+      background: {
+        default: "#f0fdd3",
+      },
+    },
+  });
+
+  const darkThemeObj = createTheme({
+    palette: {
+      mode: "dark",
+      background: {
+        default: "#222",
+      },
+    },
+  });
 
   useEffect(() => {
     getPokemonsByRegion(region);
@@ -27,7 +47,6 @@ export const Home = ({ setPokemonData }) => {
   const applyFilters = () => {
     let filtered = [...allPokemons];
 
-    // Filtro por nome ou ID
     if (searchTerm.trim() !== "") {
       filtered = filtered.filter((pokemon) => {
         const name = pokemon.data.name.toLowerCase();
@@ -37,14 +56,12 @@ export const Home = ({ setPokemonData }) => {
       });
     }
 
-    // Filtro por tipo
     if (type && type !== "all") {
       filtered = filtered.filter((pokemon) =>
         pokemon.data.types.some((t) => t.type.name === type)
       );
     }
 
-    // Ordenação
     if (sortBy === "name") {
       filtered.sort((a, b) => a.data.name.localeCompare(b.data.name));
     } else if (sortBy === "id") {
@@ -112,7 +129,7 @@ export const Home = ({ setPokemonData }) => {
   };
 
   const pokemonFilter = (value) => {
-    setSearchTerm(value); // deixa o filtro automático via useEffect
+    setSearchTerm(value);
   };
 
   const pokemonPickHandler = (pokemonData) => {
@@ -120,107 +137,127 @@ export const Home = ({ setPokemonData }) => {
   };
 
   return (
-    <div>
-      <Box
+    <ThemeProvider theme={darkMode ? darkThemeObj : lightTheme}>
+      <CssBaseline />
+      <Button
+        variant="contained"
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          backgroundColor: "#f0fdd3",
-          py: 4,
+          position: "fixed",
+          top: 20,
+          right: 20,
+          zIndex: 9999,
+          borderRadius: 2,
+          background: darkMode ? "#fff" : "#222",
+          color: darkMode ? "#222" : "#fff",
+          fontWeight: "bold",
         }}
+        onClick={() => setDarkMode((prev) => !prev)}
       >
-        {/* Imagem grande da Pokédex */}
+        {darkMode ? "Tema Claro" : "Tema Escuro"}
+      </Button>
+      <div>
         <Box
           sx={{
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            gap: 3,
-            mb: 4,
+            backgroundColor: darkMode ? "#222" : "#f0fdd3",
+            py: 4,
           }}
         >
           <Box
-            component="img"
-            src="/assets/pokedex.png" // substitua pelo nome correto
-            alt="Pokédex"
             sx={{
-              maxWidth: "120px",
-              width: "40%",
-            }}
-          />
-
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: "bold",
-              color: "red",
-              fontFamily: "monospace",
-              textShadow: "1px 1px 2px black",
+              display: "flex",
+              alignItems: "center",
+              gap: 3,
+              mb: 4,
             }}
           >
-            Pokédex Wilzo
-          </Typography>
+            <Box
+              component="img"
+              src="/assets/pokedex.png"
+              alt="Pokédex"
+              sx={{
+                maxWidth: "120px",
+                width: "40%",
+              }}
+            />
+
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: "bold",
+                color: "red",
+                fontFamily: "monospace",
+                textShadow: "1px 1px 2px black",
+              }}
+            >
+              Pokédex Wilzo
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: 4,
+            }}
+          >
+            <FilterBar
+              onRegionChange={(e) => setRegion(e.target.value)}
+              onTypeChange={(e) => setType(e.target.value)}
+              onSortChange={(e) => setSortBy(e.target.value)}
+              onSearchChange={(e) => setSearchTerm(e.target.value)}
+              darkMode={darkMode} // Adiciona a prop para acompanhar o tema
+            />
+          </Box>
         </Box>
 
-        {/* Filtros */}
-        <Box
+        <Container
+          maxWidth={false}
           sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            gap: 4,
+            backgroundColor: darkMode ? "#222" : "#f0fdd3",
           }}
         >
-          <FilterBar
-            onRegionChange={(e) => setRegion(e.target.value)}
-            onTypeChange={(e) => setType(e.target.value)}
-            onSortChange={(e) => setSortBy(e.target.value)}
-            onSearchChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </Box>
-      </Box>
+          <Grid container spacing={2}>
+            {pokemons.map((pokemon, key) => {
+              const data = pokemon.data;
+              const mainType = data.types[0].type.name;
+              const cardStyle = getTypeStyle(mainType);
 
-      <Container
-        maxWidth={false}
-        sx={{
-          backgroundColor: "#f0fdd3",
-        }}
-      >
-        <Grid container spacing={2}>
-          {pokemons.map((pokemon, key) => {
-            const data = pokemon.data;
-            const mainType = data.types[0].type.name;
-            const cardStyle = getTypeStyle(mainType);
-
-            return (
-              <Grid item xs={12} md={3} key={key}>
-                <Box
-                  onClick={() => pokemonPickHandler(data)}
-                  sx={{
-                    backgroundColor: cardStyle.backgroundColor,
-                    borderRadius: 2,
-                    p: 2,
-                    cursor: "pointer",
-                    transition: "0.3s",
-                    "&:hover": {
-                      transform: "scale(1.03)",
-                      boxShadow: 3,
-                    },
-                  }}
-                >
-                  <PokemonCard
-                    name={data.name}
-                    image={data.sprites.other["official-artwork"].front_default}
-                    types={data.types}
-                    style={cardStyle}
-                  />
-                </Box>
-              </Grid>
-            );
-          })}
-        </Grid>
-      </Container>
-    </div>
+              return (
+                <Grid item xs={12} md={3} key={key}>
+                  <Box
+                    onClick={() => pokemonPickHandler(data)}
+                    sx={{
+                      backgroundColor: cardStyle.backgroundColor,
+                      borderRadius: 2,
+                      p: 2,
+                      cursor: "pointer",
+                      transition: "0.3s",
+                      "&:hover": {
+                        transform: "scale(1.03)",
+                        boxShadow: 3,
+                      },
+                    }}
+                  >
+                    <PokemonCard
+                      name={data.name}
+                      image={
+                        data.sprites.other["official-artwork"].front_default
+                      }
+                      types={data.types}
+                      style={cardStyle}
+                    />
+                  </Box>
+                </Grid>
+              );
+            })}
+          </Grid>
+        </Container>
+      </div>
+    </ThemeProvider>
   );
 };
 export default Home;

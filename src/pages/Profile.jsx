@@ -8,12 +8,14 @@ import {
   Paper,
   Grid,
   Divider,
+  Button,
 } from "@mui/material";
 import { getTypeStyle } from "../utils/typeColors";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 import axios from "axios";
 
 export const Profile = () => {
@@ -21,10 +23,28 @@ export const Profile = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const pokemonData = location.state?.pokemonData;
-
+  const [darkMode, setDarkMode] = useState(false);
   const [speciesData, setSpeciesData] = useState(null);
 
   if (!pokemonData) return <p>Pokémon não encontrado.</p>;
+
+  const lightTheme = createTheme({
+    palette: {
+      mode: "light",
+      background: {
+        default: "#f0fdd3",
+      },
+    },
+  });
+
+  const darkThemeObj = createTheme({
+    palette: {
+      mode: "dark",
+      background: {
+        default: "#222",
+      },
+    },
+  });
 
   const {
     name,
@@ -46,6 +66,7 @@ export const Profile = () => {
       (entry) => entry.language.name === "en"
     )?.flavor_text ||
     "Descrição não disponível.";
+
   useEffect(() => {
     if (!pokemonData?.species?.url) return;
 
@@ -79,14 +100,32 @@ export const Profile = () => {
 
     fetchData();
   }, [pokemonData]);
+
   return (
-    <>
+    <ThemeProvider theme={darkMode ? darkThemeObj : lightTheme}>
+      <CssBaseline />
+      <Button
+        variant="contained"
+        sx={{
+          position: "fixed",
+          top: 20,
+          right: 20,
+          zIndex: 9999,
+          borderRadius: 2,
+          background: darkMode ? "#fff" : "#222",
+          color: darkMode ? "#222" : "#fff",
+          fontWeight: "bold",
+        }}
+        onClick={() => setDarkMode((prev) => !prev)}
+      >
+        {darkMode ? "Tema Claro" : "Tema Escuro"}
+      </Button>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          backgroundColor: "#f0fdd3",
+          backgroundColor: darkMode ? "#222" : "#f0fdd3",
           py: 4,
         }}
       >
@@ -121,18 +160,19 @@ export const Profile = () => {
         </Box>
       </Box>
       <div>
-        <Box sx={{ backgroundColor: "#f0fdd3" }}>
+        <Box sx={{ backgroundColor: darkMode ? "#222" : "#f0fdd3" }}>
           <Container maxWidth="md" sx={{ p: 10 }}>
             <Paper
               elevation={5}
               sx={{
                 borderRadius: 4,
-                background: "linear-gradient(to bottom, #c0f8c1, #d8b4f8)",
+                background: darkMode
+                  ? "linear-gradient(to bottom, #222, #444)"
+                  : "linear-gradient(to bottom, #c0f8c1, #d8b4f8)",
                 p: 4,
                 fontFamily: "monospace",
               }}
             >
-              {/* Header do card */}
               <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
                   <Typography variant="h6" fontWeight="bold" sx={{ mb: 1 }}>
@@ -145,8 +185,6 @@ export const Profile = () => {
                   >
                     {name}
                   </Typography>
-
-                  {/* Tipo(s) */}
                   <Box sx={{ mt: 1, display: "flex", gap: 1 }}>
                     {types.map((t, idx) => {
                       const style = getTypeStyle(t.type.name);
@@ -168,16 +206,12 @@ export const Profile = () => {
                       );
                     })}
                   </Box>
-
-                  {/* Imagem */}
                   <Box
                     component="img"
                     src={sprites?.other?.["official-artwork"]?.front_default}
                     alt={name}
                     sx={{ width: "100%", maxWidth: 150, mt: 2 }}
                   />
-
-                  {/* Altura e peso */}
                   <Typography sx={{ mt: 2 }}>
                     <strong>Altura:</strong> {height / 10} m
                   </Typography>
@@ -188,12 +222,12 @@ export const Profile = () => {
                     <strong>Experiencia:</strong> {base_experience}
                   </Typography>
                 </Grid>
-
-                {/* Informações à direita */}
                 <Grid item xs={12} md={8}>
                   <Box
                     sx={{
-                      backgroundColor: "rgba(255,255,255,0.3)",
+                      backgroundColor: darkMode
+                        ? "rgba(50,50,50,0.7)"
+                        : "rgba(255,255,255,0.3)",
                       p: 2,
                       borderRadius: 2,
                       mb: 2,
@@ -206,7 +240,9 @@ export const Profile = () => {
                   </Box>
                   <Box
                     sx={{
-                      backgroundColor: "rgba(255,255,255,0.3)",
+                      backgroundColor: darkMode
+                        ? "rgba(50,50,50,0.7)"
+                        : "rgba(255,255,255,0.3)",
                       p: 2,
                       borderRadius: 2,
                       mb: 2,
@@ -221,11 +257,11 @@ export const Profile = () => {
                       ))}
                     </Box>
                   </Box>
-
-                  {/* Stats */}
                   <Box
                     sx={{
-                      backgroundColor: "rgba(255,255,255,0.3)",
+                      backgroundColor: darkMode
+                        ? "rgba(50,50,50,0.7)"
+                        : "rgba(255,255,255,0.3)",
                       p: 2,
                       borderRadius: 2,
                       mb: 2,
@@ -251,8 +287,6 @@ export const Profile = () => {
                       ))}
                     </Grid>
                   </Box>
-
-                  {/* Evolução */}
                   {evolutionChain.length > 1 && (
                     <Box sx={{ mt: 4 }}>
                       <Typography
@@ -315,8 +349,6 @@ export const Profile = () => {
                                 {evo.name}
                               </Typography>
                             </Box>
-
-                            {/* Adiciona a seta exceto no último */}
                             {index !== evolutionChain.length - 1 && (
                               <Typography fontSize="2rem" fontWeight="bold">
                                 →
@@ -350,6 +382,6 @@ export const Profile = () => {
           </Container>
         </Box>
       </div>
-    </>
+    </ThemeProvider>
   );
 };
