@@ -42,7 +42,7 @@ pokeDex/
 │   │   │   └── index.jsx
 │   │   ├── PokemonCard/
 │   │   │   └── index.jsx
-│   │   └── NavBar/
+│   │   └── PokemonTable/
 │   │       └── index.jsx
 │   ├── pages/
 │   │   ├── Home.jsx
