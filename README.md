@@ -1,8 +1,8 @@
-# 🧿 Pokédex - React + TypeScript + Material UI
+# 🧿 Pokédex - React + JavaScript + Material UI
 
 ✅ Projeto Concluído
 
-Uma Pokédex moderna desenvolvida com React, utilizando TypeScript, Material UI para a interface e a PokéAPI para obter dados dos Pokémon em tempo real.
+Uma Pokédex moderna desenvolvida com React, utilizando Javascript, Material UI para a interface e a PokéAPI para obter dados dos Pokémon em tempo real.
 
 🔗 **Acesse o projeto online:**  
 https://poke-dex-ruby.vercel.app/
@@ -25,7 +25,7 @@ Interface amigável, responsiva e estilizada com Material UI. Exibe os Pokémon 
   - Habilidades
   - Altura, peso e status base
 - 🎨 UI responsiva com Material UI
-- ⚙️ Projeto estruturado com React + TypeScript
+- ⚙️ Projeto estruturado com React + Javascript
 
 ---
 
